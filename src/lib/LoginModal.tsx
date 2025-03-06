@@ -4,7 +4,34 @@ import { Loader2 } from "lucide-react";
 import { WalletClient } from "./client";
 import { getOAuth2Link } from "./utils/twitter";
 import { useGoogleLogin } from "@react-oauth/google";
-import "./LoginModal.css";
+import {
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalTitle,
+  CloseButton,
+  CloseIcon,
+  LoadingContainer,
+  LoadingSpinner,
+  LoadingText,
+  FormContainer,
+  InputField,
+  Button,
+  DividerContainer,
+  DividerLine,
+  DividerBorder,
+  DividerText,
+  SocialButtons,
+  SocialButton,
+  SocialIcon,
+  VerificationContainer,
+  VerificationTitle,
+  VerificationSubtitle,
+  CodeInputs,
+  CodeInput,
+  BackButton,
+  FooterText,
+} from "./LoginModal.styles";
 
 interface LoginModalProps {
   client: WalletClient;
@@ -162,139 +189,120 @@ export function LoginModal({
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <div className="modal-header">
-          <h2 className="modal-title">Connect Wallet</h2>
-          <button onClick={onClose} className="close-button">
-            <svg
-              className="close-icon"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+    <ModalOverlay>
+      <ModalContent>
+        <ModalHeader>
+          <ModalTitle>Connect Wallet</ModalTitle>
+          <CloseButton onClick={onClose}>
+            <CloseIcon viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
                 d="M6 18L18 6M6 6l12 12"
               />
-            </svg>
-          </button>
-        </div>
+            </CloseIcon>
+          </CloseButton>
+        </ModalHeader>
         {isLoading ? (
-          <div className="loading-container">
-            <Loader2 className="loading-spinner" />
-            <p className="loading-text">
+          <LoadingContainer>
+            <LoadingSpinner as={Loader2} />
+            <LoadingText>
               {type ? `Authenticating with ${type}...` : "Authenticating..."}
-            </p>
-          </div>
+            </LoadingText>
+          </LoadingContainer>
         ) : (
           <>
             {!emailSent ? (
-              <div className="form-container">
-                <div className="form-container">
-                  <input
+              <FormContainer>
+                <FormContainer>
+                  <InputField
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email"
-                    className="input-field"
                     disabled={sendingCode}
                   />
-                  <button
+                  <Button
                     onClick={handleSendVerificationCode}
-                    className="btn-primary"
                     disabled={!email || sendingCode}
                   >
                     {sendingCode ? "Sending..." : "Send Verification Code"}
-                  </button>
-                </div>
+                  </Button>
+                </FormContainer>
 
-                <div className="divider-container">
-                  <div className="divider-line">
-                    <div className="divider-border" />
-                  </div>
-                  <div className="divider-text">
+                <DividerContainer>
+                  <DividerLine>
+                    <DividerBorder />
+                  </DividerLine>
+                  <DividerText>
                     <span>Or continue with</span>
-                  </div>
-                </div>
+                  </DividerText>
+                </DividerContainer>
 
-                <div className="social-buttons">
-                  <button
-                    onClick={() => onOauthLogin(SocialType.Google)}
-                    className="social-button"
-                  >
-                    <img
+                <SocialButtons>
+                  <SocialButton onClick={() => onOauthLogin(SocialType.Google)}>
+                    <SocialIcon
                       src="https://www.google.com/favicon.ico"
                       alt="Google"
-                      className="social-icon"
                     />
                     Google
-                  </button>
-                  <button
+                  </SocialButton>
+                  <SocialButton
                     onClick={() => onOauthLogin(SocialType.Twitter)}
-                    className="social-button"
                   >
-                    <img
+                    <SocialIcon
                       src="https://abs.twimg.com/favicons/twitter.ico"
                       alt="Twitter"
-                      className="social-icon"
                     />
                     Twitter
-                  </button>
-                </div>
-              </div>
+                  </SocialButton>
+                </SocialButtons>
+              </FormContainer>
             ) : (
-              <div className="verification-container">
+              <VerificationContainer>
                 <div>
-                  <h3 className="verification-title">
-                    Enter Verification Code
-                  </h3>
-                  <p className="verification-subtitle">
+                  <VerificationTitle>Enter Verification Code</VerificationTitle>
+                  <VerificationSubtitle>
                     We sent a verification code to {email}
-                  </p>
+                  </VerificationSubtitle>
                 </div>
 
-                <div className="code-inputs">
+                <CodeInputs>
                   {verificationCode.map((digit, index) => (
-                    <input
+                    <CodeInput
                       key={index}
                       ref={inputRefs[index]}
                       type="text"
-                      maxLength={6}
+                      maxLength={1}
                       value={digit}
                       onChange={(e) => handleCodeChange(index, e.target.value)}
                       onKeyDown={(e) => handleKeyDown(index, e)}
-                      className="code-input"
                     />
                   ))}
-                </div>
+                </CodeInputs>
 
-                <button
+                <Button
                   onClick={handleCodeSubmit}
                   disabled={
                     verificationCode.join("").length !== 6 || verifyingCode
                   }
-                  className="btn-primary"
                 >
                   {verifyingCode ? "Verifying..." : "Verify Code"}
-                </button>
+                </Button>
 
-                <div className="back-button">
-                  <button onClick={() => setEmailSent(false)}>
-                    Back to Login
-                  </button>
-                </div>
-              </div>
+                <BackButton onClick={() => setEmailSent(false)}>
+                  Back to Email
+                </BackButton>
+              </VerificationContainer>
             )}
           </>
         )}
-        <p className="footer-text">
-          By connecting a wallet, you agree to our Terms of Service and Privacy
-          Policy
-        </p>
-      </div>
-    </div>
+        <FooterText>
+          By connecting your wallet, you agree to our Terms of Service and
+          Privacy Policy
+        </FooterText>
+      </ModalContent>
+    </ModalOverlay>
   );
 }
