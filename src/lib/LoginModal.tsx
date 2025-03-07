@@ -50,7 +50,7 @@ export function LoginModal({
   isLoading = false,
   type,
 }: LoginModalProps) {
-  const [email, setEmail] = useState("test@gmail.com");
+  const [email, setEmail] = useState("");
   const [emailSent, setEmailSent] = useState(false);
   const [verificationCode, setVerificationCode] = useState([
     "",
