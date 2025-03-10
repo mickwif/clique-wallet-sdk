@@ -80,7 +80,7 @@ export const FormContainer = styled.div`
 
 export const InputField = styled.input`
   width: 100%;
-  padding: 0.5rem;
+  padding: 0.6rem;
   border: 1px solid #d1d5db;
   border-radius: 0.375rem;
   &:disabled {
@@ -90,7 +90,7 @@ export const InputField = styled.input`
 
 export const Button = styled.button`
   width: 100%;
-  padding: 0.5rem;
+  padding: 0.8rem;
   background-color: #3b82f6;
   color: white;
   border-radius: 0.375rem;
